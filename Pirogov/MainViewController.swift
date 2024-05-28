@@ -10,10 +10,8 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    var data = Cakes.fetchCakes()
 
-    
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let image = UIImage(named: "logo")
         let imageView = UIImageView()
         imageView.image = image
@@ -42,8 +40,9 @@ class MainViewController: UIViewController {
         
         setConstraint()
         menuCollectionView.set(cell: MenuProducts.fetchMenu())
+        
 //                menuCollectionView.selectItem(at: indexPatch, animated: false, scrollPosition: .centeredHorizontally)
-         
+        
         
     }
 }

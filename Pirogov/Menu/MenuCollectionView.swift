@@ -12,18 +12,27 @@ class MenuCollectionView: UICollectionView {
     var cells = [MenuProducts]()
     
     
+//    var menu: Menu = Menu()
+    var selectedIndexGroup = 0
+
+    lazy var menuTableViewContr = MenuTableViewController()
+
+    
+
     
     init() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         super.init(frame: .zero, collectionViewLayout: layout)
         
-//        backgroundColor = .systemGreen
+        
         delegate = self
         dataSource = self
         register(MenuCollectionViewCell.self, forCellWithReuseIdentifier: MenuCollectionViewCell.id)
         translatesAutoresizingMaskIntoConstraints = false
         showsHorizontalScrollIndicator = false
+        
+        
         
     }
     
@@ -34,6 +43,7 @@ class MenuCollectionView: UICollectionView {
     func set(cell: [MenuProducts]) {
         self.cells = cell
     }
+    
     
     
     
@@ -49,6 +59,13 @@ extension MenuCollectionView: UICollectionViewDelegate {
         cell.nameProduct.textColor = .white
         cell.backgroundColor = #colorLiteral(red: 0.06266801804, green: 0.2313786149, blue: 0.3019550741, alpha: 0.8709160003)
         cell.layer.masksToBounds = true
+    
+        
+        //---------------
+        self.selectedIndexGroup = indexPath.item
+        print(selectedIndexGroup)
+        menuTableViewContr.updateTable()
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -73,7 +90,6 @@ extension MenuCollectionView: UICollectionViewDataSource {
         if let cell = dequeueReusableCell(withReuseIdentifier: MenuCollectionViewCell.id, for: indexPath) as? MenuCollectionViewCell {
             cell.nameProduct.text = self.cells[indexPath.row].name
             cell.layer.cornerRadius = 15
-            
             return cell
         }
         return UICollectionViewCell()

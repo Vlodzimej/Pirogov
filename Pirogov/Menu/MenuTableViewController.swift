@@ -11,7 +11,20 @@ import UIKit
 class MenuTableViewController: UITableViewController {
     
     
-    let data = Cakes.fetchCakes()
+    
+    let productPies = Pies.fetchPies()
+    let productCakes = Cakes.fetchCakes()
+    
+//    let productPies = Menu.setupPies()
+//    let productCakes = Menu.setupCakes()
+    
+    
+    
+    lazy var menuCollectionView = MenuCollectionView()
+//
+//    let menuGroup = Group.setupGroup()
+
+
     
 
     override func viewDidLoad() {
@@ -29,7 +42,12 @@ class MenuTableViewController: UITableViewController {
 
 
     }
-
+    
+    func updateTable() {
+        tableView.reloadData()
+        print("update")
+    }
+    
     // MARK: - UITableView Delegate
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -50,7 +68,7 @@ class MenuTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return data.count
+        return productPies.count
     }
 
     
@@ -58,10 +76,41 @@ class MenuTableViewController: UITableViewController {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? MenuTableViewCell {
             
-            let product = data[indexPath.row]
+            switch menuCollectionView.selectedIndexGroup {
+            case 0:
+                let pies = productPies[indexPath.row]
+    
+                cell.nameProduct.text = pies.name
+                cell.priceLabel.text = pies.price
+                
+                print("пироги")
+                break
+            case 1:
+                let cakes = productCakes[indexPath.row]
+                
+                cell.nameProduct.text = cakes.name
+                cell.priceLabel.text = cakes.price
+                
+                print("торты")
+                break
+            default: break
+            }
+          
+
             
-            cell.nameProduct.text = product.name
-            cell.priceLabel.text = product.price
+            
+//            let product = productPies[indexPath.row]
+//        
+//            cell.nameProduct.text = product.name
+//            cell.priceLabel.text = product.price
+            
+            
+//     ------------------------------------------------
+//            let product2 = productCakes[indexPath.row]
+//        
+//            cell.nameProduct.text = product2.name
+//            cell.priceLabel.text = product2.price
+            
             
             return cell
         }
@@ -75,7 +124,7 @@ class MenuTableViewController: UITableViewController {
         headerView.backgroundColor = .white
         
         let label = UILabel()
-//        label.frame = CGRect(x: 0, y: 0, width: 150, height: headerView.frame.height - 10)
+        label.frame = CGRect(x: 0, y: 0, width: 150, height: headerView.frame.height)
         label.font = .systemFont(ofSize: 17)
         label.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -94,6 +143,7 @@ class MenuTableViewController: UITableViewController {
 
         headerView.addSubview(label)
         NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: headerView.topAnchor),
             label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15)
         ])
         
@@ -108,11 +158,11 @@ class MenuTableViewController: UITableViewController {
         let vc = DetailProductViewController()
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            vc.nameProduct.text = data[indexPath.row].name
-            vc.compositionProduct.text = "Состав: \(data[indexPath.row].composition ?? "")"
-            vc.nameTitleButton = "В корзину   \(data[indexPath.row].price ?? "")"
+            vc.nameProduct.text = productPies[indexPath.row].name
+            vc.compositionProduct.text = "Состав: \(productPies[indexPath.row].composition ?? "")"
+            vc.nameTitleButton = "В корзину   \(productPies[indexPath.row].price ?? "")"
         }
-
+        
         self.show(vc, sender: tableView)
         
         print("check")

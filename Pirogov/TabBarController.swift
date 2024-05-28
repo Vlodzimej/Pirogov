@@ -8,22 +8,43 @@
 import UIKit
 
 class TabBarController: UITabBarController {
+    
+    let logoView: UIImageView = {
+        let image = UIImage(named: "logo")
+        let imageView = UIImageView()
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let mainViewController = MainViewController()
+    let shoppingCartConroller = ShoppingCartController()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        generateTabBar()
 
-        // Do any additional setup after loading the view.
+        self.navigationItem.titleView = logoView
+    
+        self.tabBar.isTranslucent = false
+        self.tabBar.backgroundColor = .white
+        self.tabBar.itemPositioning = .automatic
+        self.tabBar.tintColor = #colorLiteral(red: 0.06266801804, green: 0.2313786149, blue: 0.3019550741, alpha: 0.8709160003)
+    }
+    //  MARK: - Create Tab Bar
+    private func generateTabBar() {
+        viewControllers = [
+            generateVC(viewController: mainViewController, title: "Меню", image: UIImage(systemName: "house")),
+            generateVC(viewController: shoppingCartConroller, title: "Корзина", image: UIImage(systemName: "cart"))
+        ]
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func generateVC(viewController: UIViewController, title: String, image: UIImage?) -> UIViewController {
+        viewController.tabBarItem.title = title
+        viewController.tabBarItem.image = image
+        
+        return viewController
     }
-    */
-
 }
