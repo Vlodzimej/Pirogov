@@ -19,10 +19,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let myWindow = UIWindow(windowScene: windowScene)
                 
         
-        let tabBarController = TabBarController()
+//        let tabBarController = TabBarController()
+        let launchScreen = LaunchScreen()
 
    
-        let navigationController = UINavigationController(rootViewController: tabBarController)
+        let navigationController = UINavigationController(rootViewController: launchScreen)
         myWindow.rootViewController = navigationController
 
         self.window = myWindow

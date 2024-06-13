@@ -7,46 +7,34 @@
 
 import UIKit
 
-
 class MenuTableViewController: UITableViewController {
-    
-    
-    
-    let productPies = Pies.fetchPies()
-    let productCakes = Cakes.fetchCakes()
-    
-//    let productPies = Menu.setupPies()
-//    let productCakes = Menu.setupCakes()
-    
-    
-    
-    lazy var menuCollectionView = MenuCollectionView()
-//
-//    let menuGroup = Group.setupGroup()
 
-
+    
+    let menu = GroupProducts.setup()
+    
+    private var selectedIndex: Int = 0
+    
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.showsVerticalScrollIndicator = false
         tableView.allowsSelection = true
-        
-        
-
-
     }
     
-    func updateTable() {
+    // MARK: - Reload Table
+    func updateTable(by index: Int) {
+        selectedIndex = index
         tableView.reloadData()
-        print("update")
+        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
+    
+    
+    
     
     // MARK: - UITableView Delegate
 
@@ -68,7 +56,7 @@ class MenuTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return productPies.count
+        return menu[0].products.count
     }
 
     
@@ -76,41 +64,20 @@ class MenuTableViewController: UITableViewController {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? MenuTableViewCell {
             
-            switch menuCollectionView.selectedIndexGroup {
+            switch selectedIndex {
             case 0:
-                let pies = productPies[indexPath.row]
-    
-                cell.nameProduct.text = pies.name
-                cell.priceLabel.text = pies.price
-                
-                print("пироги")
+                let pies = menu[0].products[indexPath.row]
+                cell.updateCell(model: pies)
                 break
             case 1:
-                let cakes = productCakes[indexPath.row]
-                
-                cell.nameProduct.text = cakes.name
-                cell.priceLabel.text = cakes.price
-                
-                print("торты")
+                let cakes = menu[1].products[indexPath.row]
+                cell.updateCell(model: cakes)
                 break
+            case 2:
+                let dessert = menu[2].products[indexPath.row]
+                cell.updateCell(model: dessert)
             default: break
             }
-          
-
-            
-            
-//            let product = productPies[indexPath.row]
-//        
-//            cell.nameProduct.text = product.name
-//            cell.priceLabel.text = product.price
-            
-            
-//     ------------------------------------------------
-//            let product2 = productCakes[indexPath.row]
-//        
-//            cell.nameProduct.text = product2.name
-//            cell.priceLabel.text = product2.price
-            
             
             return cell
         }
@@ -139,8 +106,6 @@ class MenuTableViewController: UITableViewController {
         default: break
         }
             
-        tableView.addSubview(headerView)
-
         headerView.addSubview(label)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: headerView.topAnchor),
@@ -151,21 +116,31 @@ class MenuTableViewController: UITableViewController {
     }
     
 
-    
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let vc = DetailProductViewController()
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            vc.nameProduct.text = productPies[indexPath.row].name
-            vc.compositionProduct.text = "Состав: \(productPies[indexPath.row].composition ?? "")"
-            vc.nameTitleButton = "В корзину   \(productPies[indexPath.row].price ?? "")"
+            
+            switch selectedIndex {
+            case 0:
+                let pies = menu[0].products[indexPath.row]
+                vc.configure(model: pies)
+                break
+            case 1:
+                let cakes = menu[1].products[indexPath.row]
+                vc.configure(model: cakes)
+                break
+            case 2:
+                let dessert = menu[2].products[indexPath.row]
+                vc.configure(model: dessert)
+                break
+            default: break
+            }
         }
         
         self.show(vc, sender: tableView)
-        
-        print("check")
     }
     
     
@@ -217,5 +192,8 @@ class MenuTableViewController: UITableViewController {
     */
 
 }
+
+
+
 
 

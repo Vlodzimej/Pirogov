@@ -11,10 +11,11 @@ import UIKit
 class MenuTableViewCell: UITableViewCell {
     
     private let idCell = "Cell"
+    
 
     // MARK: - UIProrerties
     
-    let productImageView: UIImageView = {
+    private lazy var productImageView: UIImageView = {
         let image = UIImage(named: "image1.jpg")
         let imageView = UIImageView(image: image)
         imageView.frame = CGRect(x: 0, y: 0, width: 130, height: 83)
@@ -23,7 +24,7 @@ class MenuTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    let nameProduct: UILabel = {
+    private lazy var nameProductLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
         label.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
@@ -33,19 +34,19 @@ class MenuTableViewCell: UITableViewCell {
         return label
     }()
     
-    let priceLabel: UILabel = {
+    private lazy var priceLabel: UILabel = {
         let label = UILabel()
         label.clipsToBounds = true
-        label.font = .boldSystemFont(ofSize: 13)
+        label.font = .monospacedDigitSystemFont(ofSize: 13, weight: .medium)
         label.textColor = .black
         label.textAlignment = .center
         label.backgroundColor = #colorLiteral(red: 0.934909761, green: 0.9466791749, blue: 0.9464722276, alpha: 1)
         label.layer.cornerRadius = 15
-        label.text = "2 250" + " ₽"
+//        label.text = "2 250" + " ₽"
         return label
     }()
     
-    private var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .center
@@ -59,7 +60,7 @@ class MenuTableViewCell: UITableViewCell {
         
         selectionStyle = .none
         
-        stackView.addArrangedSubview(nameProduct)
+        stackView.addArrangedSubview(nameProductLabel)
         stackView.addArrangedSubview(priceLabel)
         
         setConstraints()
@@ -69,7 +70,17 @@ class MenuTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
+    // MARK: - Method Update Cell
+    
+    func updateCell(model product: Product) {
+        productImageView.image = product.image.images[0] ?? UIImage(named: "picture")
+        nameProductLabel.text = product.name
+        priceLabel.text = String(product.price ?? 0) + " ₽"
+    }
 }
+
 
 
     // MARK: - Settings Constraints
@@ -96,11 +107,11 @@ extension MenuTableViewCell {
             stackView.leadingAnchor.constraint(equalTo: productImageView.trailingAnchor)
         ])
         
-        stackView.addSubview(nameProduct)
-        nameProduct.translatesAutoresizingMaskIntoConstraints = false
+        stackView.addSubview(nameProductLabel)
+        nameProductLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            nameProduct.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.90),
-            nameProduct.centerXAnchor.constraint(equalTo: stackView.centerXAnchor)
+            nameProductLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.90),
+            nameProductLabel.centerXAnchor.constraint(equalTo: stackView.centerXAnchor)
         ])
         
         stackView.addSubview(priceLabel)

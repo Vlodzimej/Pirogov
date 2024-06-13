@@ -7,23 +7,29 @@
 
 import UIKit
 
+//    MARK: - Protocol
+
+protocol MenuDelegate: AnyObject {
+    func didUpdateTableViewData(by selectedIndex: Int)
+}
+
+
 class MenuCollectionView: UICollectionView {
-    
+
     var cells = [MenuProducts]()
+//    var cells = MenuProducts.fetchMenu()
     
     
-//    var menu: Menu = Menu()
-    var selectedIndexGroup = 0
-
-    lazy var menuTableViewContr = MenuTableViewController()
-
+    private var selectedIndexGroup: Int = 0
     
+    
+    weak var menuDelegate: MenuDelegate?
 
     
     init() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        super.init(frame: .zero, collectionViewLayout: layout)
+        super.init(frame: CGRect.zero, collectionViewLayout: layout)
         
         
         delegate = self
@@ -32,8 +38,7 @@ class MenuCollectionView: UICollectionView {
         translatesAutoresizingMaskIntoConstraints = false
         showsHorizontalScrollIndicator = false
         
-        
-        
+//        set(cell: MenuProducts.fetchMenu())
     }
     
     required init?(coder: NSCoder) {
@@ -43,11 +48,10 @@ class MenuCollectionView: UICollectionView {
     func set(cell: [MenuProducts]) {
         self.cells = cell
     }
-    
-    
-    
-    
 }
+
+
+
 
     // MARK:  - UICollectionViewDelegate
 
@@ -55,27 +59,18 @@ extension MenuCollectionView: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
        
-        let cell = collectionView.cellForItem(at: indexPath) as! MenuCollectionViewCell
-        cell.nameProduct.textColor = .white
-        cell.backgroundColor = #colorLiteral(red: 0.06266801804, green: 0.2313786149, blue: 0.3019550741, alpha: 0.8709160003)
-        cell.layer.masksToBounds = true
-    
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         
-        //---------------
         self.selectedIndexGroup = indexPath.item
-        print(selectedIndexGroup)
-        menuTableViewContr.updateTable()
+        collectionView.reloadData()
         
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-       
-        let cell  = collectionView.cellForItem(at: indexPath) as! MenuCollectionViewCell
-        cell.nameProduct.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
-        cell.backgroundColor = .white
-        cell.layer.masksToBounds = true
+        menuDelegate?.didUpdateTableViewData(by: indexPath.item)
+        
+        print(selectedIndexGroup)
     }
 }
+
+
 
     // MARK: - UICollectionViewDataSource
 
@@ -88,8 +83,18 @@ extension MenuCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if let cell = dequeueReusableCell(withReuseIdentifier: MenuCollectionViewCell.id, for: indexPath) as? MenuCollectionViewCell {
-            cell.nameProduct.text = self.cells[indexPath.row].name
+            cell.nameProductLabel.text = self.cells[indexPath.row].name
             cell.layer.cornerRadius = 15
+
+            if indexPath.item == selectedIndexGroup {
+                cell.nameProductLabel.textColor = .white
+                cell.backgroundColor = #colorLiteral(red: 0.06266801804, green: 0.2313786149, blue: 0.3019550741, alpha: 0.8709160003)
+                cell.layer.masksToBounds = true
+            } else {
+                cell.nameProductLabel.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
+                cell.backgroundColor = .white
+                cell.layer.masksToBounds = true
+            }
             return cell
         }
         return UICollectionViewCell()

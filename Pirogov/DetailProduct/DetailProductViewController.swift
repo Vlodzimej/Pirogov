@@ -9,51 +9,67 @@ import UIKit
 
 class DetailProductViewController: UIViewController {
     
-    let menuTableViewCell = MenuTableViewCell()
-    
-    let images: [UIImage] = [UIImage.image1, UIImage.image2, UIImage.image3, UIImage.image4, UIImage.image5]
-    
     var nameTitleButton: String = ""
+    
+    var countImage: [UIImage?] = []
+    
+    var productImages = GroupProducts.setup()
+    
+    
     
     // MARK: - UIProrerties
     
-    private let scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.isPagingEnabled = true
         scrollView.scrollsToTop = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isDirectionalLockEnabled = true
-        scrollView.bounces = false
+        scrollView.bounces = true
         return scrollView
     }()
     
-    private let pageControl: UIPageControl = {
+    private lazy var contentView: UIView = {
+        let contentView = UIView()
+        contentView.backgroundColor = .systemBlue
+        return contentView
+    }()
+    
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.backgroundColor = .systemGray
+        return stackView
+    }()
+    
+    private lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.pageIndicatorTintColor = #colorLiteral(red: 0.2, green: 0.3058823529, blue: 0.3803921569, alpha: 1)
         pageControl.currentPageIndicatorTintColor = #colorLiteral(red: 0.7004614472, green: 0.7929691672, blue: 0.8534081578, alpha: 1)
         pageControl.hidesForSinglePage = true
-        pageControl.backgroundStyle = .automatic
+        pageControl.backgroundStyle = .prominent
         pageControl.allowsContinuousInteraction = false
         return pageControl
     }()
-
-    let nameProduct: UILabel = {
+    
+    let nameProductLabel: UILabel = {
         let label = UILabel()
         label.font = .monospacedDigitSystemFont(ofSize: 18, weight: .light)
         label.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
-//        label.clipsToBounds = true
+        //        label.clipsToBounds = true
         label.sizeToFit()
         return label
     }()
     
-    let compositionProduct: UILabel = {
+    let ingredientsProductLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15)
         label.textColor = #colorLiteral(red: 0.2, green: 0.3058823529, blue: 0.3803921569, alpha: 1)
         label.textAlignment = .left
-        label.numberOfLines = 5
-//        label.backgroundColor = .systemBlue
+        label.numberOfLines = 6
+        //        label.backgroundColor = .systemBlue
         return label
     }()
     
@@ -84,50 +100,58 @@ class DetailProductViewController: UIViewController {
         button.backgroundColor = #colorLiteral(red: 0.2, green: 0.3058823529, blue: 0.3803921569, alpha: 1)
         return button
     }()
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         
-        
+        createImage()
         setConstraints()
         
-        pageControl.numberOfPages = images.count
-
+        pageControl.numberOfPages = countImage.count
+        
         scrollView.delegate = self
-        scrollView.contentSize = CGSize(width: Int(UIScreen.main.bounds.width) * images.count, height: 265)
+        scrollView.contentSize = CGSize(width: Int(UIScreen.main.bounds.width) * countImage.count, height: 263)
+        
+//        contentView.frame.size = CGSize(width: Int(UIScreen.main.bounds.width) * countImage.count, height: Int(UIScreen.main.bounds.height))
+        
 
-        
-        createImage(image: images[0], position: 0)
-        createImage(image: images[1], position: 1)
-        createImage(image: images[2], position: 2)
-        createImage(image: images[3], position: 3)
-        createImage(image: images[4], position: 4)
-        
-        
         energyLabel.text = "Энергетическая ценность: 234 Ккал на 100 гр."
         addButton.setTitle(nameTitleButton, for: .normal)
-          
+        
     }
     
-    private func createImage(image: UIImage, position: CGFloat) {
-        
-        let imageView: UIImageView = {
-            let imageView = UIImageView()
-            imageView.image = image
-            imageView.contentMode = .scaleAspectFill
-            return imageView
-        }()
-        
-        scrollView.addSubview(imageView)
-        let screenWidth = UIScreen.main.bounds.width
-        imageView.frame = CGRect(x: screenWidth * position, y: 0, width: screenWidth, height: 265)
+    
+    
+    private func createImage() {
+        for image in 0..<countImage.count {
+            let imageView: UIImageView = {
+                let imageView = UIImageView()
+                imageView.contentMode = .scaleToFill
+                imageView.image = countImage[image % countImage.count]
+                return imageView
+            }()
+            
+            stackView.addArrangedSubview(imageView)
+        }
     }
     
-
+    
+    // MARK: - Configure
+    
+    func configure(model product: Product) {
+        countImage = product.image.images
+        nameProductLabel.text = product.name
+        ingredientsProductLabel.text = "Состав: \(product.ingredients ?? "")"
+        nameTitleButton = "В корзину  " + String(product.price ?? 0) + " ₽"
+    }
+    
+    
+    
 }
-    // MARK: - UIScrollViewDelegate
+// MARK: - UIScrollViewDelegate
 
 extension DetailProductViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -135,21 +159,43 @@ extension DetailProductViewController: UIScrollViewDelegate {
     }
 }
 
- 
 
-    // MARK: - Settings Constraints
+
+// MARK: - Settings Constraints
 
 extension DetailProductViewController {
-
+    
     func setConstraints() {
         view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            scrollView.heightAnchor.constraint(equalToConstant: 265),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.heightAnchor.constraint(equalToConstant: 263),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
+        
+
+        scrollView.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+
+                
+        contentView.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+        
+        for view in stackView.arrangedSubviews {
+            NSLayoutConstraint.activate([
+                view.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
+                view.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+            ])
+        }
+        
         
         view.addSubview(pageControl)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
@@ -159,22 +205,22 @@ extension DetailProductViewController {
         ])
         
         
-        view.addSubview(nameProduct)
-        nameProduct.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(nameProductLabel)
+        nameProductLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            nameProduct.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            nameProduct.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 40)
+            nameProductLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nameProductLabel.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 40)
         ])
         
         
-        view.addSubview(compositionProduct)
-        compositionProduct.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ingredientsProductLabel)
+        ingredientsProductLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            compositionProduct.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.90),
-            compositionProduct.heightAnchor.constraint(equalToConstant: 100),
-            compositionProduct.topAnchor.constraint(equalTo: nameProduct.bottomAnchor, constant: 40),
-            compositionProduct.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
-//            compositionProduct.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            ingredientsProductLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.90),
+            ingredientsProductLabel.heightAnchor.constraint(equalToConstant: 120),
+            ingredientsProductLabel.topAnchor.constraint(equalTo: nameProductLabel.bottomAnchor, constant: 40),
+            ingredientsProductLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
+            //            compositionProduct.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
         
         view.addSubview(energyLabel)
@@ -182,7 +228,7 @@ extension DetailProductViewController {
         NSLayoutConstraint.activate([
             energyLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.90),
             energyLabel.heightAnchor.constraint(equalToConstant: 30),
-            energyLabel.topAnchor.constraint(equalTo: compositionProduct.bottomAnchor, constant: 15),
+            energyLabel.topAnchor.constraint(equalTo: ingredientsProductLabel.bottomAnchor, constant: 15),
             energyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
         ])
         
@@ -191,7 +237,7 @@ extension DetailProductViewController {
         NSLayoutConstraint.activate([
             massProductLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.90),
             massProductLabel.heightAnchor.constraint(equalToConstant: 30),
-            massProductLabel.topAnchor.constraint(equalTo: compositionProduct.bottomAnchor, constant: 15),
+            massProductLabel.topAnchor.constraint(equalTo: ingredientsProductLabel.bottomAnchor, constant: 15),
             massProductLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
         ])
         
@@ -201,7 +247,7 @@ extension DetailProductViewController {
             addButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.70),
             addButton.heightAnchor.constraint(equalToConstant: 40),
             addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            addButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50)
+            addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
         ])
     }
 }

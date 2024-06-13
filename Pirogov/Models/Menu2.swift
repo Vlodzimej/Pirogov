@@ -10,8 +10,9 @@
 //
 //struct Product {
 //    var name: String?
-//    var composition: String?
+//    var ingredients: String?
 //    var price: String?
+//    var image: UIImage?
 //}
 //
 //struct Group {

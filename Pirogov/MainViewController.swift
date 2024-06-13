@@ -7,45 +7,35 @@
 
 import UIKit
 
-
 class MainViewController: UIViewController {
-    
-
-    let imageView: UIImageView = {
-        let image = UIImage(named: "logo")
-        let imageView = UIImageView()
-        imageView.image = image
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
     
     let menuCollectionView = MenuCollectionView()
     
     let menuTableVC = MenuTableViewController()
     
     
-
-    
-    // !!!
-//    var indexPatch = IndexPath(item: 1, section: 0)
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         
-        
-        self.navigationItem.titleView = imageView
+        menuCollectionView.menuDelegate = self
         
         setConstraint()
         menuCollectionView.set(cell: MenuProducts.fetchMenu())
         
-//                menuCollectionView.selectItem(at: indexPatch, animated: false, scrollPosition: .centeredHorizontally)
-        
-        
+
+
     }
 }
+    // MARK: - Update Table MenuTableViewController
+extension MainViewController: MenuDelegate {
+    
+    func didUpdateTableViewData(by selectedIndex: Int) {
+        menuTableVC.updateTable(by: selectedIndex)
+    }
+}
+
 
 
     // MARK: - Settings Constraints
@@ -56,7 +46,7 @@ extension MainViewController {
         view.addSubview(menuCollectionView)
         NSLayoutConstraint.activate([
             menuCollectionView.heightAnchor.constraint(equalToConstant: 35),
-            menuCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 110),
+            menuCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             menuCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             menuCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10)
         ])

@@ -15,23 +15,20 @@ class MenuCollectionViewCell: UICollectionViewCell {
     static let id = "MenuCollectionViewCell"
     
     
-    let nameProduct: UILabel = {
+    let nameProductLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
         label.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
         label.sizeToFit()
         return label
     }()
-    
-    
+        
     
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         setConstraints()
         
-        
-
     }
     
     required init?(coder: NSCoder) {
@@ -40,14 +37,15 @@ class MenuCollectionViewCell: UICollectionViewCell {
     
     
     
+    
     // MARK: - Settings Constraints
     
     func setConstraints() {
-        self.addSubview(nameProduct)
-        nameProduct.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(nameProductLabel)
+        nameProductLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            nameProduct.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            nameProduct.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            nameProductLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            nameProductLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
     }
 }
