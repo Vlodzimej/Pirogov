@@ -53,7 +53,7 @@ class MenuCollectionView: UICollectionView {
 
 
 
-    // MARK:  - UICollectionViewDelegate
+//    MARK:  - UICollectionViewDelegate
 
 extension MenuCollectionView: UICollectionViewDelegate {
     
@@ -72,7 +72,7 @@ extension MenuCollectionView: UICollectionViewDelegate {
 
 
 
-    // MARK: - UICollectionViewDataSource
+//    MARK: - UICollectionViewDataSource
 
 extension MenuCollectionView: UICollectionViewDataSource {
     
@@ -88,7 +88,7 @@ extension MenuCollectionView: UICollectionViewDataSource {
 
             if indexPath.item == selectedIndexGroup {
                 cell.nameProductLabel.textColor = .white
-                cell.backgroundColor = #colorLiteral(red: 0.06266801804, green: 0.2313786149, blue: 0.3019550741, alpha: 0.8709160003)
+                cell.backgroundColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 0.8709160003)
                 cell.layer.masksToBounds = true
             } else {
                 cell.nameProductLabel.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
@@ -101,7 +101,7 @@ extension MenuCollectionView: UICollectionViewDataSource {
     }
 }
 
-    // MARK: - UICollectionViewDelegateFlowLayout
+//    MARK: - UICollectionViewDelegateFlowLayout
 
 extension MenuCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

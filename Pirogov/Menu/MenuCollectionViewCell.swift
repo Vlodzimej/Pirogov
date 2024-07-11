@@ -38,7 +38,7 @@ class MenuCollectionViewCell: UICollectionViewCell {
     
     
     
-    // MARK: - Settings Constraints
+//    MARK: - Settings Constraints
     
     func setConstraints() {
         self.addSubview(nameProductLabel)

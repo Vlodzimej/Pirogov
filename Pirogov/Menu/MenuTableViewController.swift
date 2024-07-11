@@ -24,6 +24,8 @@ class MenuTableViewController: UITableViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.showsVerticalScrollIndicator = false
         tableView.allowsSelection = true
+        
+        
     }
     
     // MARK: - Reload Table

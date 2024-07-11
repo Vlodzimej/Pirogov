@@ -32,6 +32,9 @@ class LaunchScreen: UIViewController {
     }
 }
 
+
+//    MARK: - Settings Constraints
+
 extension LaunchScreen {
     
     func setConstraints() {

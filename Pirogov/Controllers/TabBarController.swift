@@ -34,11 +34,13 @@ class TabBarController: UITabBarController {
         self.tabBar.tintColor = #colorLiteral(red: 0.06266801804, green: 0.2313786149, blue: 0.3019550741, alpha: 0.8709160003)
         
         self.navigationItem.hidesBackButton = true
+        
+        
 
 
     }
     
-    //  MARK: - Create Tab Bar
+//    MARK: - Create Tab Bar
     
     private func generateTabBar() {
         viewControllers = [

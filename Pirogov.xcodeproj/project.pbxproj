@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E604043C2BFF7E5300689394 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E604043B2BFF7E5300689394 /* TabBarController.swift */; };
 		E604043E2BFF7E9C00689394 /* ShoppingCartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E604043D2BFF7E9C00689394 /* ShoppingCartController.swift */; };
+		E60F49002C24177600614146 /* SaleCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60F48FF2C24177600614146 /* SaleCollectionView.swift */; };
+		E60F49022C24195800614146 /* SaleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60F49012C24195800614146 /* SaleCollectionViewCell.swift */; };
 		E6127B5E2BF5EC930080096F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6127B5D2BF5EC930080096F /* AppDelegate.swift */; };
 		E6127B602BF5EC930080096F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6127B5F2BF5EC930080096F /* SceneDelegate.swift */; };
 		E6127B622BF5EC930080096F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6127B612BF5EC930080096F /* MainViewController.swift */; };
@@ -22,12 +24,13 @@
 		E65458C82BFC798F00D09F5D /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65458C72BFC798F00D09F5D /* MenuTableViewController.swift */; };
 		E66259592BFB7164000CB80E /* DetailProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66259582BFB7164000CB80E /* DetailProductViewController.swift */; };
 		E68F4D1B2C1B22FC0063EE30 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68F4D1A2C1B22FC0063EE30 /* LaunchScreen.swift */; };
-		E6D81C392C00ACC300AC2074 /* Menu2.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D81C382C00ACC300AC2074 /* Menu2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E604043B2BFF7E5300689394 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E604043D2BFF7E9C00689394 /* ShoppingCartController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartController.swift; sourceTree = "<group>"; };
+		E60F48FF2C24177600614146 /* SaleCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleCollectionView.swift; sourceTree = "<group>"; };
+		E60F49012C24195800614146 /* SaleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleCollectionViewCell.swift; sourceTree = "<group>"; };
 		E6127B5A2BF5EC930080096F /* Pirogov.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pirogov.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6127B5D2BF5EC930080096F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E6127B5F2BF5EC930080096F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -43,7 +46,6 @@
 		E65458C72BFC798F00D09F5D /* MenuTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		E66259582BFB7164000CB80E /* DetailProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailProductViewController.swift; sourceTree = "<group>"; };
 		E68F4D1A2C1B22FC0063EE30 /* LaunchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
-		E6D81C382C00ACC300AC2074 /* Menu2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E60F48FD2C24170E00614146 /* Sale */ = {
+			isa = PBXGroup;
+			children = (
+				E60F48FF2C24177600614146 /* SaleCollectionView.swift */,
+				E60F49012C24195800614146 /* SaleCollectionViewCell.swift */,
+			);
+			path = Sale;
+			sourceTree = "<group>";
+		};
+		E60F48FE2C24172500614146 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E68F4D1A2C1B22FC0063EE30 /* LaunchScreen.swift */,
+				E6127B612BF5EC930080096F /* MainViewController.swift */,
+				E604043B2BFF7E5300689394 /* TabBarController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		E6127B512BF5EC930080096F = {
 			isa = PBXGroup;
 			children = (
@@ -78,9 +99,8 @@
 			children = (
 				E6127B5D2BF5EC930080096F /* AppDelegate.swift */,
 				E6127B5F2BF5EC930080096F /* SceneDelegate.swift */,
-				E68F4D1A2C1B22FC0063EE30 /* LaunchScreen.swift */,
-				E6127B612BF5EC930080096F /* MainViewController.swift */,
-				E604043B2BFF7E5300689394 /* TabBarController.swift */,
+				E60F48FE2C24172500614146 /* Controllers */,
+				E60F48FD2C24170E00614146 /* Sale */,
 				E66259572BFB7114000CB80E /* Menu */,
 				E662595A2BFB717A000CB80E /* DetailProduct */,
 				E696A1B12C08B6F100F4F999 /* Shopping */,
@@ -97,7 +117,6 @@
 			isa = PBXGroup;
 			children = (
 				E6127B742BF603A20080096F /* Menu.swift */,
-				E6D81C382C00ACC300AC2074 /* Menu2.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -202,14 +221,15 @@
 			files = (
 				E68F4D1B2C1B22FC0063EE30 /* LaunchScreen.swift in Sources */,
 				E65458C82BFC798F00D09F5D /* MenuTableViewController.swift in Sources */,
-				E6D81C392C00ACC300AC2074 /* Menu2.swift in Sources */,
 				E6127B622BF5EC930080096F /* MainViewController.swift in Sources */,
 				E6127B5E2BF5EC930080096F /* AppDelegate.swift in Sources */,
 				E604043C2BFF7E5300689394 /* TabBarController.swift in Sources */,
 				E630F5F32BF772A5002092A6 /* MenuTableViewCell.swift in Sources */,
+				E60F49002C24177600614146 /* SaleCollectionView.swift in Sources */,
 				E604043E2BFF7E9C00689394 /* ShoppingCartController.swift in Sources */,
 				E6127B602BF5EC930080096F /* SceneDelegate.swift in Sources */,
 				E6127B722BF601160080096F /* MenuCollectionView.swift in Sources */,
+				E60F49022C24195800614146 /* SaleCollectionViewCell.swift in Sources */,
 				E66259592BFB7164000CB80E /* DetailProductViewController.swift in Sources */,
 				E6127B752BF603A20080096F /* Menu.swift in Sources */,
 				E6127B772BF606BB0080096F /* MenuCollectionViewCell.swift in Sources */,

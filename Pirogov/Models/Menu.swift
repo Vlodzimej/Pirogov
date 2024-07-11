@@ -9,6 +9,11 @@ import Foundation
 import UIKit
 
 
+struct Sale {
+    static var imageArray = ["sale_bd", "sale_combo_1", "sale_combo_2", "sale_combo_3", "sale_combo_4"]
+}
+
+
 struct MenuProducts {
     var name: String
     
@@ -161,79 +166,3 @@ var dessert = GroupProducts(name: "Дессерты", products: [
             image: ImagesProduct(images: [UIImage(named: "image1")])
            )
 ])
-
-
-
-
-
-
-//struct Pies {
-//    var name: String?
-//    var ingredients: String?
-//    var price: Int?
-//    var image: UIImage?
-//    
-//    static func fetchPies() -> [Pies] {
-//        let pies: [Pies] = [
-//            Pies(name: "Пирог с кроликом и свежими грибами",
-//                 ingredients: "лук репчатый, мясо кролика, грибы шампиньоны, укроп.",
-//                 price: 2250,
-//                 image: UIImage(named: "image1")),
-//            Pies(name: "Пирог рататуй с уткой",
-//                 ingredients: "баклажаны, перец болгарский, кабачки, морковь, грибы шампиньоны,  мясо утки.",
-//                 price: 2850,
-//                 image: UIImage(named: "image1")),
-//            Pies(name: "Пирог с рыбой",
-//                 ingredients: "тесто дрожжевое (мука, яйцо, маргарин сливочный, молоко, дрожжи, сахар, соль), начинка из отварной рыбки , с добавлением лука, соли, приправ и майонеза.",
-//                 price: 760,
-//                 image: UIImage(named: "image1")),
-//            Pies(name: "Пирог с сыром",
-//                 ingredients: "тесто (мука, яйцо, дрожжи, маргарин, соль, сахар), начинка(сыр адыгейский и твëрдые сорта сыров).",
-//                 price: 760,
-//                 image: UIImage(named: "image1")),
-//            Pies(name: "Пирог с капустой",
-//                 ingredients: "тесто дрожжевое (мука, молоко, маргарин сливочный, дрожжи, сахар, соль), начинка из рубленой капусты,пассированной моркови с добавлением репчатого лука и специй. * Пирог БЕЗ добавления майонеза.",
-//                 price: 600,
-//                 image: UIImage(named: "image1"))
-//        ]
-//        return pies
-//    }
-//}
-//
-//
-//struct Cakes {
-//    var name: String?
-//    var ingredients: String?
-//    var price: Int?
-//    var image: UIImage?
-//    
-//    static func fetchCakes() -> [Cakes] {
-//        let cakes: [Cakes] = [
-//            Cakes(name: "Рулет меренговый",
-//                  ingredients: "яйцо, сахар, крахмал кукурузный, орехи миндаль, сыр Креметте, сливки, малина, крем-чиз и свежая голубика.",
-//                  price: 850,
-//                  image: UIImage(named: "cake1")),
-//            Cakes(name: "Торт Медовый с лавандой и чёрной смородиной",
-//                  ingredients: "тесто (мука в/с, мёд, сахар-песок, масло сливочное, яйцо куриное, цветки лаванды, соль), прослойка (черная смородина, мёд, крахмал кукурузный), крем (сметана, сахар, мёд, ванилин). Внешний вид товара может отличаться от изображений, представленных на сайте.",
-//                  price: 700,
-//                  image: UIImage(named: "cake1")),
-//            Cakes(name: "Торт «Красный бархат»",
-//                  ingredients: "тесто (мука в/с, яйцо куриное, сметана, сахар песок, какао, сода, соль, растительное масло), крем-чиз (сыр творожный «Креметте», масло сливочное, сахарная пудра, ванилин).",
-//                  price: 700,
-//                  image: UIImage(named: "cake1")),
-//            Cakes(name: "Торт Наполеон классический по-домашнему",
-//                  ingredients: " cлоёное бездрожжевое тесто (мука в/с, соль, сахар, масло сливочное), заварной ванильный крем (молоко, мука в/с, сахар, яйцо куриное, масло сливочное).",
-//                  price: 600,
-//                  image: UIImage(named: "cake1")),
-//            Cakes(name: "Торт «Три шоколада»",
-//                  ingredients: "шоколадный бисквит, мусс из шоколада (молочный, горький, белый)",
-//                  price: 1050,
-//                  image: UIImage(named: "cake1"))
-//        ]
-//        return cakes
-//    }
-//}
-
-
-
-

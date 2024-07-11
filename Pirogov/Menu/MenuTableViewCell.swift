@@ -40,7 +40,7 @@ class MenuTableViewCell: UITableViewCell {
         label.font = .monospacedDigitSystemFont(ofSize: 13, weight: .medium)
         label.textColor = .black
         label.textAlignment = .center
-        label.backgroundColor = #colorLiteral(red: 0.934909761, green: 0.9466791749, blue: 0.9464722276, alpha: 1)
+        label.backgroundColor = #colorLiteral(red: 0.9333333333, green: 0.9450980392, blue: 0.9450980392, alpha: 1)
         label.layer.cornerRadius = 15
 //        label.text = "2 250" + " ₽"
         return label
