@@ -67,7 +67,7 @@ struct GroupProducts {
 
 
 
-//MARK: - Pies
+//  MARK: - Pies
 
 var pies = GroupProducts(name: "Пироги", products: [
     Product(name: "Пирог с кроликом и свежими грибами",
@@ -103,7 +103,7 @@ var pies = GroupProducts(name: "Пироги", products: [
 ])
 
 
-// MARK: - Cakes
+//  MARK: - Cakes
 
 var cakes = GroupProducts(name: "Торты", products: [
     Product(name: "Рулет меренговый",
@@ -137,7 +137,7 @@ var cakes = GroupProducts(name: "Торты", products: [
 ])
 
 
-// MARK: - Dessert
+//  MARK: - Dessert
 
 var dessert = GroupProducts(name: "Дессерты", products: [
     Product(name: "Круглик мини с фисташковым кремом",

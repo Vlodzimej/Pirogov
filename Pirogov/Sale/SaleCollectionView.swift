@@ -17,10 +17,10 @@ class SaleCollectionView: UICollectionView {
                       UIImage(named: "sale_combo_3"),
                       UIImage(named: "sale_combo_4")]
     
-    init() {
+    init(frame: CGRect) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        super.init(frame: CGRect.zero, collectionViewLayout: layout)
+        super.init(frame: frame, collectionViewLayout: layout)
         
         delegate = self
         dataSource = self

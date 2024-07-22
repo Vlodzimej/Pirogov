@@ -14,10 +14,10 @@ class MenuTableViewController: UITableViewController {
     
     private var selectedIndex: Int = 0
     
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         
         tableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "Cell")
@@ -25,14 +25,14 @@ class MenuTableViewController: UITableViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.allowsSelection = true
         
-        
+        tableView.isScrollEnabled = false
     }
     
     // MARK: - Reload Table
     func updateTable(by index: Int) {
         selectedIndex = index
-        tableView.reloadData()
-        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+//        tableView.reloadData()
+        tableView.scrollToRow(at: IndexPath(row: 0, section: index), at: .top, animated: true)
     }
     
     

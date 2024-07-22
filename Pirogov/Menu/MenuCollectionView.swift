@@ -26,10 +26,10 @@ class MenuCollectionView: UICollectionView {
     weak var menuDelegate: MenuDelegate?
 
     
-    init() {
+    init(frame: CGRect) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        super.init(frame: CGRect.zero, collectionViewLayout: layout)
+        super.init(frame: frame, collectionViewLayout: layout)
         
         
         delegate = self

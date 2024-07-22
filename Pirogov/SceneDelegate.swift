@@ -19,7 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let myWindow = UIWindow(windowScene: windowScene)
                 
         
-//        let tabBarController = TabBarController()
         let launchScreen = LaunchScreen()
 
    
