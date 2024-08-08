@@ -9,11 +9,16 @@ import UIKit
 
 class DetailProductViewController: UIViewController {
     
+    //  MARK: - Properties
+    
     var nameTitleButton: String = ""
     
     var countImage: [UIImage?] = []
     
     var productImages = GroupProducts.setup()
+    
+    var product: Product?
+    
     
     
     
@@ -54,26 +59,26 @@ class DetailProductViewController: UIViewController {
         return pageControl
     }()
     
-    let nameProductLabel: UILabel = {
+    private lazy var nameProductLabel: UILabel = {
         let label = UILabel()
         label.font = .monospacedDigitSystemFont(ofSize: 18, weight: .light)
         label.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
-        //        label.clipsToBounds = true
+        label.textAlignment = .center
         label.sizeToFit()
+        label.numberOfLines = 3
         return label
     }()
     
-    let ingredientsProductLabel: UILabel = {
+    private lazy var ingredientsProductLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15)
         label.textColor = #colorLiteral(red: 0.2, green: 0.3058823529, blue: 0.3803921569, alpha: 1)
         label.textAlignment = .left
-        label.numberOfLines = 6
-        //        label.backgroundColor = .systemBlue
+        label.numberOfLines = 10
         return label
     }()
     
-    let energyLabel: UILabel = {
+    private lazy var energyLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
         label.textColor = #colorLiteral(red: 0.3469551802, green: 0.5091798306, blue: 0.6099575162, alpha: 1)
@@ -82,7 +87,7 @@ class DetailProductViewController: UIViewController {
         return label
     }()
     
-    let massProductLabel: UILabel = {
+    private lazy var massProductLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
         label.textColor = #colorLiteral(red: 0.3469551802, green: 0.5091798306, blue: 0.6099575162, alpha: 1)
@@ -91,13 +96,24 @@ class DetailProductViewController: UIViewController {
         return label
     }()
     
-    let addButton: UIButton = {
+    private lazy var addInCartButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.textColor = .white
         button.titleLabel?.font = .systemFont(ofSize: 17)
         button.layer.cornerRadius = 10
         button.titleLabel?.textAlignment = .center
         button.backgroundColor = #colorLiteral(red: 0.2, green: 0.3058823529, blue: 0.3803921569, alpha: 1)
+        button.addTarget(nil, action: #selector(addToCart), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var closeScreenButton: UIButton = {
+        let button = UIButton(type: .close)
+        button.titleLabel?.textColor = .white
+        button.layer.cornerRadius = .infinity
+        button.titleLabel?.textAlignment = .center
+        button.backgroundColor = #colorLiteral(red: 0.7547900081, green: 0.7547900081, blue: 0.7547900081, alpha: 1)
+        button.addTarget(nil, action: #selector(closeScreen), for: .touchUpInside)
         return button
     }()
     
@@ -119,11 +135,14 @@ class DetailProductViewController: UIViewController {
         
 
         energyLabel.text = "Энергетическая ценность: 234 Ккал на 100 гр."
-        addButton.setTitle(nameTitleButton, for: .normal)
+//        addButton.setTitle(nameTitleButton, for: .normal)
         
     }
     
+
     
+    
+    //  MARK: - Corusel Images
     
     private func createImage() {
         for image in 0..<countImage.count {
@@ -139,19 +158,47 @@ class DetailProductViewController: UIViewController {
     }
     
     
-    // MARK: - Configure
+    //  MARK: - Configure
     
     func configure(model product: Product) {
+        
+        self.product = product
+
         countImage = product.image.images
         nameProductLabel.text = product.name
         ingredientsProductLabel.text = "Состав: \(product.ingredients ?? "")"
         nameTitleButton = "В корзину  " + String(product.price ?? 0) + " ₽"
+        
+        addInCartButton.setTitle(nameTitleButton, for: .normal)
+
     }
     
     
+    //  MARK: - Method Add To Cart
+    @objc func addToCart() {
+
+        guard let product = product else { return }
+        
+        Cart.shared.addItem(product)
+        
+        let alert = UIAlertController(title: nil, message: "Товар добавлен в корзину", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+            self?.dismiss(animated: true, completion: nil)
+        }))
+        
+        present(alert, animated: true)
+        
+    }
     
+    //  MARK: - Method Close Screen
+    @objc func closeScreen() {
+        self.dismiss(animated: true, completion: nil)
+    }
 }
-// MARK: - UIScrollViewDelegate
+
+
+
+    //  MARK: - UIScrollViewDelegate
 
 extension DetailProductViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -161,16 +208,26 @@ extension DetailProductViewController: UIScrollViewDelegate {
 
 
 
-// MARK: - Settings Constraints
+    //  MARK: - Settings Constraints
 
 extension DetailProductViewController {
     
     func setConstraints() {
+        
+        view.addSubview(closeScreenButton)
+        closeScreenButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            closeScreenButton.widthAnchor.constraint(equalToConstant: 25),
+            closeScreenButton.heightAnchor.constraint(equalToConstant: 25),
+            closeScreenButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            closeScreenButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+        ])
+        
         view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             scrollView.heightAnchor.constraint(equalToConstant: 263),
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: closeScreenButton.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
@@ -208,6 +265,8 @@ extension DetailProductViewController {
         view.addSubview(nameProductLabel)
         nameProductLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+            nameProductLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.90),
+            nameProductLabel.heightAnchor.constraint(equalToConstant: 50),
             nameProductLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             nameProductLabel.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 40)
         ])
@@ -217,7 +276,7 @@ extension DetailProductViewController {
         ingredientsProductLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             ingredientsProductLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.90),
-            ingredientsProductLabel.heightAnchor.constraint(equalToConstant: 120),
+            ingredientsProductLabel.heightAnchor.constraint(equalToConstant: 130),
             ingredientsProductLabel.topAnchor.constraint(equalTo: nameProductLabel.bottomAnchor, constant: 40),
             ingredientsProductLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
             //            compositionProduct.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
@@ -241,13 +300,13 @@ extension DetailProductViewController {
             massProductLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
         ])
         
-        view.addSubview(addButton)
-        addButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(addInCartButton)
+        addInCartButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            addButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.70),
-            addButton.heightAnchor.constraint(equalToConstant: 40),
-            addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
+            addInCartButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.70),
+            addInCartButton.heightAnchor.constraint(equalToConstant: 40),
+            addInCartButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            addInCartButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
         ])
     }
 }

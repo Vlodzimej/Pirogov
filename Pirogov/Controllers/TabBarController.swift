@@ -18,7 +18,7 @@ class TabBarController: UITabBarController {
     }()
     
     let mainViewController = MainViewController()
-    let shoppingCartConroller = ShoppingCartController()
+    let cartConroller = CartViewController()
     
 
     override func viewDidLoad() {
@@ -42,7 +42,7 @@ class TabBarController: UITabBarController {
     private func generateTabBar() {
         viewControllers = [
             generateVC(viewController: mainViewController, title: "Меню", image: UIImage(systemName: "house")),
-            generateVC(viewController: shoppingCartConroller, title: "Корзина", image: UIImage(systemName: "cart"))
+            generateVC(viewController: cartConroller, title: "Корзина", image: UIImage(systemName: "cart"))
         ]
     }
     

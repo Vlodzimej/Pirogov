@@ -18,13 +18,9 @@ class MenuTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
         tableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.showsVerticalScrollIndicator = false
-        tableView.allowsSelection = true
-        
         tableView.isScrollEnabled = false
     }
     
@@ -34,6 +30,27 @@ class MenuTableViewController: UITableViewController {
 //        tableView.reloadData()
         tableView.scrollToRow(at: IndexPath(row: 0, section: index), at: .top, animated: true)
     }
+    
+    
+    // MARK: - Метод расчета высоты таблицы
+    
+        func calculateTableHeight() -> CGFloat {
+            let numberOfSections = self.numberOfSections(in: tableView)
+            var totalHeight: CGFloat = 0.0
+            
+            for section in 0..<numberOfSections {
+                let numberOfRows = self.tableView(tableView, numberOfRowsInSection: section)
+                let headerHeight = self.tableView(tableView, heightForHeaderInSection: section)
+                totalHeight += headerHeight
+                
+                for _ in 0..<numberOfRows {
+                    let rowHeight = self.tableView(tableView, heightForRowAt: IndexPath(row: 0, section: section))
+                    totalHeight += rowHeight
+                }
+            }
+            
+            return totalHeight
+        }
     
     
     
@@ -49,42 +66,30 @@ class MenuTableViewController: UITableViewController {
     }
     
     
-    // MARK: - UITableView Data Source
+    // MARK: - UITableView DataSource
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 3
+        return menu.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return menu[0].products.count
+        return menu[section].count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? MenuTableViewCell {
-            
-            switch selectedIndex {
-            case 0:
-                let pies = menu[0].products[indexPath.row]
-                cell.updateCell(model: pies)
-                break
-            case 1:
-                let cakes = menu[1].products[indexPath.row]
-                cell.updateCell(model: cakes)
-                break
-            case 2:
-                let dessert = menu[2].products[indexPath.row]
-                cell.updateCell(model: dessert)
-            default: break
-            }
-            
-            return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? MenuTableViewCell else {
+            return UITableViewCell()
         }
-        return UITableViewCell()
-    }
+        
+        let products = menu[indexPath.section][indexPath.row]
+        cell.configureCell(model: products)
+        
+        return cell
+        }
     
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -98,15 +103,8 @@ class MenuTableViewController: UITableViewController {
         label.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         
-        switch section {
-        case 0:
-            label.text = "Постные пироги"
-        case 1:
-            label.text = "Пироги"
-        case 2:
-            label.text = "Наборы пирогов"
-        default: break
-        }
+        let sectionTitles = ["Пироги", "Торты", "Десерты", "Выпечка", "Киши", "Пицца", "Напитки"]
+        label.text = sectionTitles[section]
             
         headerView.addSubview(label)
         NSLayoutConstraint.activate([
@@ -125,25 +123,13 @@ class MenuTableViewController: UITableViewController {
         
         if let indexPath = tableView.indexPathForSelectedRow {
             
-            switch selectedIndex {
-            case 0:
-                let pies = menu[0].products[indexPath.row]
-                vc.configure(model: pies)
-                break
-            case 1:
-                let cakes = menu[1].products[indexPath.row]
-                vc.configure(model: cakes)
-                break
-            case 2:
-                let dessert = menu[2].products[indexPath.row]
-                vc.configure(model: dessert)
-                break
-            default: break
+            let product = menu[indexPath.section][indexPath.row]
+            vc.configure(model: product)
+            
+            self.show(vc, sender: tableView)
             }
         }
-        
-        self.show(vc, sender: tableView)
-    }
+    
     
     
 

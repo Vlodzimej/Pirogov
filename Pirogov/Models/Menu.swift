@@ -9,55 +9,91 @@ import Foundation
 import UIKit
 
 
+    //  MARK: - Структура для акций
 struct Sale {
     static var imageArray = ["sale_bd", "sale_combo_1", "sale_combo_2", "sale_combo_3", "sale_combo_4"]
 }
 
 
+    //  MARK: - Структура для категорий меню
 struct MenuProducts {
     var name: String
     
     static func fetchMenu() -> [MenuProducts] {
         
-        let firstItem = MenuProducts(name: "Пироги")
-        let secondItem = MenuProducts(name: "Торты")
-        let thirdItem = MenuProducts(name: "Десерты")
-        let fouthItem = MenuProducts(name: "Выпечка")
-        let fifthItem = MenuProducts(name: "Киши")
-        let sixthItem = MenuProducts(name: "Пицца")
-        let seventhItem = MenuProducts(name: "Напитки")
-        
-        let menu: [MenuProducts] = [firstItem, secondItem, thirdItem, fouthItem, fifthItem, sixthItem, seventhItem]
-        
+        let menu = [
+            MenuProducts(name: "Пироги"),
+            MenuProducts(name: "Торты"),
+            MenuProducts(name: "Десерты"),
+            MenuProducts(name: "Выпечка"),
+            MenuProducts(name: "Киши"),
+            MenuProducts(name: "Пицца"),
+            MenuProducts(name: "Напитки")
+        ]
         return menu
     }
 }
 
 
-
+    //  MARK: - Структура для описания товара
 struct Product {
+    var id: Int?
     var name: String?
     var ingredients: String?
     var price: Int?
     var image: ImagesProduct
 }
 
+
+    //  MARK: - Структура для изображений товара
 struct ImagesProduct {
     var images: [UIImage?]
 }
 
 
+    //  MARK: - Класс для корзины
+class Cart {
+    static let shared = Cart()
+    
+    private(set) var items: [Product] = []
+    
+    private init() {}
+    
+    func addItem(_ item: Product) {
+        items.append(item)
+    }
+    
+    func removeItem(_ item: Product) {
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            items.remove(at: index)
+        }
+    }
+    
+    func totalItems() -> Int {
+        return items.count
+    }
+    
+    func totalPrice() -> Int {
+        return items.reduce(0) { $0 + ($1.price ?? 0) }
+    }
+}
+
+
+    //  MARK: - Структура для группировки товаров по категориям
 struct GroupProducts {
-    var name: String
     var products: [Product]
     
-    static func setup() -> [GroupProducts] {
+    static func setup() -> [[Product]] {
         
-        var nameGroup:[GroupProducts] = []
+        var nameGroup:[[Product]] = []
         
         nameGroup.append(pies)
         nameGroup.append(cakes)
         nameGroup.append(dessert)
+        nameGroup.append(bakery)
+        nameGroup.append(quiches)
+        nameGroup.append(pizza)
+        nameGroup.append(drinks)
         
         return nameGroup
     }
@@ -67,10 +103,11 @@ struct GroupProducts {
 
 
 
-//  MARK: - Pies
+    //  MARK: - Pies
 
-var pies = GroupProducts(name: "Пироги", products: [
-    Product(name: "Пирог с кроликом и свежими грибами",
+var pies: [Product] = [
+    Product(id: 1,
+            name: "Пирог с кроликом и свежими грибами",
             ingredients: "лук репчатый, мясо кролика, грибы шампиньоны, укроп.",
             price: 2250,
             image: ImagesProduct(images: [UIImage(named: "image1"),
@@ -80,89 +117,243 @@ var pies = GroupProducts(name: "Пироги", products: [
                                           UIImage(named: "image5")
                                          ])
            ),
-    Product(name: "Пирог рататуй с уткой",
+    Product(id: 2,
+            name: "Пирог рататуй с уткой",
             ingredients: "баклажаны, перец болгарский, кабачки, морковь, грибы шампиньоны, мясо утки.",
             price: 2850,
             image: ImagesProduct(images: [UIImage(named: "image1")])
            ),
-    Product(name: "Пирог с рыбой",
+    Product(id: 3,
+            name: "Пирог с рыбой",
             ingredients: "тесто дрожжевое (мука, яйцо, маргарин сливочный, молоко, дрожжи, сахар, соль), начинка из отварной рыбки, с добавлением лука, соли, приправ и майонеза.",
             price: 760,
             image: ImagesProduct(images: [UIImage(named: "image1")])
            ),
-    Product(name: "Пирог с сыром",
+    Product(id: 4,
+            name: "Пирог с сыром",
             ingredients: "тесто (мука, яйцо, дрожжи, маргарин, соль, сахар), начинка(сыр адыгейский и твëрдые сорта сыров).",
             price: 760,
             image: ImagesProduct(images: [UIImage(named: "image1")])
            ),
-    Product(name: "Пирог с капустой",
+    Product(id: 5,
+            name: "Пирог с капустой",
             ingredients: "тесто дрожжевое (мука, молоко, маргарин сливочный, дрожжи, сахар, соль), начинка из рубленой капусты, пассированной моркови с добавлением репчатого лука и специй.\n * Пирог БЕЗ добавления майонеза.",
             price: 600,
             image: ImagesProduct(images: [UIImage(named: "image1")])
            )
-])
+]
 
 
-//  MARK: - Cakes
-
-var cakes = GroupProducts(name: "Торты", products: [
-    Product(name: "Рулет меренговый",
+    //  MARK: - Cakes
+var cakes: [Product] = [
+    Product(id: 6,
+            name: "Рулет меренговый",
             ingredients: "яйцо, сахар, крахмал кукурузный, орехи миндаль, сыр Креметте, сливки, малина, крем-чиз и свежая голубика.",
             price: 850,
-            image: ImagesProduct(images: [UIImage(named: "rulet-merengovii-1"),
+            image: ImagesProduct(images: [UIImage(named: "cake1"),
                                           UIImage(named: "rulet-merengovii-2"),
                                           UIImage(named: "rulet-merengovii-3")
                                          ])
            ),
-    Product(name: "Торт Медовый с лавандой и чёрной смородиной",
-            ingredients: "тесто (мука в/с, мёд, сахар-песок, масло сливочное, яйцо куриное, цветки лаванды, соль), прослойка (черная смородина, мёд, крахмал кукурузный), крем (сметана, сахар, мёд, ванилин). Внешний вид товара может отличаться от изображений, представленных на сайте.",
+    Product(id: 7,
+            name: "Торт Медовый с лавандой и чёрной смородиной",
+            ingredients: """
+тесто (мука в/с, мёд, сахар-песок, масло сливочное, яйцо куриное, цветки лаванды, соль), прослойка (черная смородина, мёд, крахмал кукурузный), крем (сметана, сахар, мёд, ванилин).
+Внешний вид товара может отличаться от изображений, представленных на сайте.
+""",
             price: 700,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "cake1")])
            ),
-    Product(name: "Торт «Красный бархат»",
+    Product(id: 8,
+            name: "Торт «Красный бархат»",
             ingredients: "тесто (мука в/с, яйцо куриное, сметана, сахар песок, какао, сода, соль, растительное масло), крем-чиз (сыр творожный «Креметте», масло сливочное, сахарная пудра, ванилин).",
             price: 700,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "cake1")])
            ),
-    Product(name: "Торт Наполеон классический по-домашнему",
+    Product(id: 9,
+            name: "Торт Наполеон классический по-домашнему",
             ingredients: "слоёное бездрожжевое тесто (мука в/с, соль, сахар, масло сливочное), заварной ванильный крем (молоко, мука в/с, сахар, яйцо куриное, масло сливочное).",
             price: 600,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "cake1")])
            ),
-    Product(name: "Торт «Три шоколада»",
+    Product(id: 10,
+            name: "Торт «Три шоколада»",
             ingredients: "шоколадный бисквит, мусс из шоколада (молочный,горький,белый)",
             price: 1050,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "cake1")])
            )
-])
+]
 
-
-//  MARK: - Dessert
-
-var dessert = GroupProducts(name: "Дессерты", products: [
-    Product(name: "Круглик мини с фисташковым кремом",
+    //  MARK: - Dessert
+var dessert: [Product] = [
+    Product(id: 11,
+            name: "Круглик мини с фисташковым кремом",
             ingredients: "слоёное тесто собственного производства, заварной фисташковый крем, фисташковая глазурь.",
             price: 80,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
            ),
-    Product(name: "Круглик мини с варёной сгущенкой",
+    Product(id: 12,
+            name: "Круглик мини с варёной сгущенкой",
             ingredients: "слоёное тесто собственного производства, варёная сгущенка со сливками, молотый грецкий орех.",
             price: 105,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
            ),
-    Product(name: "Круглик мини с шоколадным кремом",
+    Product(id: 13,
+            name: "Круглик мини с шоколадным кремом",
             ingredients: "слоёное тесто собственного производства, шоколадный ганаш ,горький шоколад, миндальные лепестки.",
             price: 120,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
            ),
-    Product(name: "Круглик мини с клубничным кремом и черной смородиной",
+    Product(id: 14,
+            name: "Круглик мини с клубничным кремом и черной смородиной",
             ingredients: "слоёное тесто собственного производства, заварной клубничный крем, клубничная глазурь.",
             price: 80,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
            ),
-    Product(name: "Круглик мини с лимонным кремом",
+    Product(id: 15,
+            name: "Круглик мини с лимонным кремом",
             ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
             price: 105,
-            image: ImagesProduct(images: [UIImage(named: "image1")])
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
            )
-])
+]
+
+    //  MARK: - Bakary
+var bakery: [Product] = [
+    Product(id: 16,
+            name: "Круассан с шоколадным кремом \"Набор из 3 шт.\"",
+            ingredients: "слоёное тесто собственного производства, заварной фисташковый крем, фисташковая глазурь.",
+            price: 400,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 17,
+            name: "Круассан с ягодным кремом \"Набор из 3 шт.\"",
+            ingredients: "слоёное тесто собственного производства, варёная сгущенка со сливками, молотый грецкий орех.",
+            price: 400,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 18,
+            name: "Круассан с лимонным курдом \"Набор из 4 шт.\"",
+            ingredients: "слоёное тесто собственного производства, шоколадный ганаш ,горький шоколад, миндальные лепестки.",
+            price: 500,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 19,
+            name: "Дениш с вишней \"Набор из 2 шт.\"",
+            ingredients: "слоёное тесто собственного производства, заварной клубничный крем, клубничная глазурь.",
+            price: 290,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 20,
+            name: "Дениш с ананасом \"Набор из 2 шт.\"",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 290,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 21,
+            name: "Дениш с абрикосом \"Набор из 2 шт.\"",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 290,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 22,
+            name: "Круассан с миндальным кремом \"Набор из 4 шт.\"",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 560,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 23,
+            name: "Круассан с ветчиной и сыром \"Набор из 4 шт.\"",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 540,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 24,
+            name: "Косичка яблочная \"Набор из 2 шт.\"",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 350,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 25,
+            name: "Фаготтини с ветчиной и сыром \"Набор из 4 шт.\"",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 400,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 26,
+            name: "Фаготтини с курицей и грибами \"Набор из 4 шт.\"",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 400,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 27,
+            name: "Фаготтини с курицей и сыром \"Набор из 4 шт.\"",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 400,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           )
+]
+
+// Киши
+var quiches: [Product] = [
+    Product(id: 28,
+            name: "Киш с курицей и грибами",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 300,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 29,
+            name: "Киш с семгой и брокколи",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 300,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 30,
+            name: "Киш с курицей и грибами 1,1 кг.",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 1100,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 31,
+            name: "Киш с сёмгой и брокколи 1,1 кг.",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 1200,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+    Product(id: 32,
+            name: "Киш с копчёной курицей 1,1 кг.",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 1300,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           )
+]
+
+// Пицца
+var pizza: [Product] = [
+    // Добавить товары для категории пиццы
+]
+
+
+    //  MARK: - Drinks
+
+var drinks: [Product] = [
+    Product(name: "Морс (брусничный)",
+            ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
+            price: 94,
+            image: ImagesProduct(images: [UIImage(named: "karavai")])
+           ),
+]
+
+
+
+// Функция для поиска товаров по названию или ингредиентам
+func searchProducts(keyword: String) -> [Product] {
+    let allProducts = pies + cakes + dessert
+    return allProducts.filter { product in
+        product.name?.contains(keyword) == true || product.ingredients?.contains(keyword) == true
+    }
+}
+
+// Пример использования функции поиска
+//let searchResult = searchProducts(keyword: "шоколад")
+//print(searchResult)

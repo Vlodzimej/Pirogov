@@ -9,6 +9,8 @@ import UIKit
 
 class MainViewController: UIViewController, UIScrollViewDelegate {
     
+    //  MARK: - Properties
+    
     var saleCollectionview: SaleCollectionView!
     
     var menuCollectionView: MenuCollectionView!
@@ -19,12 +21,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     var timer = Timer()
     var currentIndex = 0
     
-    
+    //  MARK: - UIProperties
     private lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.isPagingEnabled = false
         scrollView.frame = view.bounds
-        scrollView.contentSize = CGSize(width: view.bounds.width, height: view.bounds.height * 2)
+        scrollView.contentSize = CGSize(width: view.bounds.width, height: view.bounds.height * CGFloat(menuTableVC.menu.count))
         return scrollView
     }()
 
@@ -44,20 +46,27 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         let menuCVConstantY = CGFloat(170)
         menuCollectionView = MenuCollectionView(frame: CGRect(x: 10, y: menuCVConstantY, width: view.bounds.width, height: 40))
         
+        // Delegate
         scrollView.delegate = self
-        
         menuCollectionView.menuDelegate = self
+        
+        
         menuCollectionView.set(cell: MenuProducts.fetchMenu())
         
         
         setConstraint()
 
+        
+        // Settings Timer SaleCollectionView
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.scrollToNext), userInfo: nil, repeats: true)
         }
         
     }
-//    MARK: - Scrolling SaleCollectionView
+    
+    
+    //  MARK: - Scrolling SaleCollectionView
+    
     @objc func scrollToNext() {
         if currentIndex < saleCollectionview.imageArray.count {
             let index = IndexPath.init(item: currentIndex, section: 0)
@@ -70,7 +79,9 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-//    MARK: - ScrollView Delegate
+    
+    //  MARK: - ScrollView Delegate
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pr = "Начинается прокрутка"
         print(pr)
@@ -80,12 +91,14 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         let initialY = CGFloat(170)     // Остановка menuCollectionView от верхней границы экрана
         let newOriginY = max(97, initialY - currentContentOffsetY)
         menuCollectionView.frame.origin.y = newOriginY
+
     }
 }
     
 
 
-//    MARK: - Update Table MenuTableViewController
+    //  MARK: - Update TableView MenuTableViewController
+
 extension MainViewController: MenuDelegate {
     
     func didUpdateTableViewData(by selectedIndex: Int) {
@@ -95,7 +108,7 @@ extension MainViewController: MenuDelegate {
 
 
 
-//    MARK: - Settings Constraints
+    //  MARK: - Settings Constraints
 
 extension MainViewController {
     

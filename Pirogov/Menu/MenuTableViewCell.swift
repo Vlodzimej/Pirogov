@@ -74,10 +74,10 @@ class MenuTableViewCell: UITableViewCell {
     
     // MARK: - Method Update Cell
     
-    func updateCell(model product: Product) {
+    func configureCell(model product: Product) {
         productImageView.image = product.image.images[0] ?? UIImage(named: "picture")
         nameProductLabel.text = product.name
-        priceLabel.text = String(product.price ?? 0) + " ₽"
+        priceLabel.text = "\(product.price ?? 0) ₽"
     }
 }
 

@@ -17,12 +17,9 @@ protocol MenuDelegate: AnyObject {
 class MenuCollectionView: UICollectionView {
 
     var cells = [MenuProducts]()
-//    var cells = MenuProducts.fetchMenu()
-    
-    
+
     private var selectedIndexGroup: Int = 0
-    
-    
+        
     weak var menuDelegate: MenuDelegate?
 
     
@@ -30,6 +27,8 @@ class MenuCollectionView: UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         super.init(frame: frame, collectionViewLayout: layout)
+        
+        self.backgroundColor = .white
         
         
         delegate = self
@@ -82,24 +81,23 @@ extension MenuCollectionView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if let cell = dequeueReusableCell(withReuseIdentifier: MenuCollectionViewCell.id, for: indexPath) as? MenuCollectionViewCell {
+        guard let cell = dequeueReusableCell(withReuseIdentifier: MenuCollectionViewCell.id, for: indexPath) as? MenuCollectionViewCell else {
+            return UICollectionViewCell()
+        }
             cell.nameProductLabel.text = self.cells[indexPath.row].name
             cell.layer.cornerRadius = 15
 
             if indexPath.item == selectedIndexGroup {
                 cell.nameProductLabel.textColor = .white
                 cell.backgroundColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 0.8709160003)
-                cell.layer.masksToBounds = true
             } else {
                 cell.nameProductLabel.textColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
                 cell.backgroundColor = .white
-                cell.layer.masksToBounds = true
             }
             return cell
         }
-        return UICollectionViewCell()
     }
-}
+
 
 //    MARK: - UICollectionViewDelegateFlowLayout
 
