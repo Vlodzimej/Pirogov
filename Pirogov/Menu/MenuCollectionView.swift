@@ -7,52 +7,69 @@
 
 import UIKit
 
-//    MARK: - Protocol
 
-protocol MenuDelegate: AnyObject {
-    func didUpdateTableViewData(by selectedIndex: Int)
-}
+class MenuCollectionView: UIView {
 
-
-class MenuCollectionView: UICollectionView {
+    //  MARK: - Properties
 
     var cells = [MenuProducts]()
+    
+    var didSelectItem: ((Int) -> Void)?
 
     private var selectedIndexGroup: Int = 0
-        
-    weak var menuDelegate: MenuDelegate?
-
     
-    init(frame: CGRect) {
+    
+    lazy var menuCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        super.init(frame: frame, collectionViewLayout: layout)
+        layout.minimumLineSpacing = 10
         
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(MenuCollectionViewCell.self, forCellWithReuseIdentifier: MenuCollectionViewCell.id)
+        return collectionView
+    }()
+        
+    
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
         self.backgroundColor = .white
+        setupCollectioView()
         
-        
-        delegate = self
-        dataSource = self
-        register(MenuCollectionViewCell.self, forCellWithReuseIdentifier: MenuCollectionViewCell.id)
-        translatesAutoresizingMaskIntoConstraints = false
-        showsHorizontalScrollIndicator = false
-        
-//        set(cell: MenuProducts.fetchMenu())
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+
     func set(cell: [MenuProducts]) {
         self.cells = cell
+    }
+    
+    //  MARK: - Method SetupCollectionView
+    
+    private func setupCollectioView() {
+        menuCollectionView.dataSource = self
+        menuCollectionView.delegate = self
+        
+        addSubview(menuCollectionView)
+        menuCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            menuCollectionView.heightAnchor.constraint(equalToConstant: 50),
+            menuCollectionView.topAnchor.constraint(equalTo: topAnchor),
+            menuCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            menuCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            menuCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
 }
 
 
 
 
-//    MARK:  - UICollectionViewDelegate
+    //  MARK:  - UICollectionViewDelegate
 
 extension MenuCollectionView: UICollectionViewDelegate {
     
@@ -63,7 +80,7 @@ extension MenuCollectionView: UICollectionViewDelegate {
         self.selectedIndexGroup = indexPath.item
         collectionView.reloadData()
         
-        menuDelegate?.didUpdateTableViewData(by: indexPath.item)
+        didSelectItem?(indexPath.item)
         
         print(selectedIndexGroup)
     }
@@ -71,7 +88,7 @@ extension MenuCollectionView: UICollectionViewDelegate {
 
 
 
-//    MARK: - UICollectionViewDataSource
+    //  MARK: - UICollectionViewDataSource
 
 extension MenuCollectionView: UICollectionViewDataSource {
     
@@ -81,9 +98,8 @@ extension MenuCollectionView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let cell = dequeueReusableCell(withReuseIdentifier: MenuCollectionViewCell.id, for: indexPath) as? MenuCollectionViewCell else {
-            return UICollectionViewCell()
-        }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MenuCollectionViewCell.id, for: indexPath) as? MenuCollectionViewCell else { return UICollectionViewCell() }
+        
             cell.nameProductLabel.text = self.cells[indexPath.row].name
             cell.layer.cornerRadius = 15
 
@@ -99,7 +115,7 @@ extension MenuCollectionView: UICollectionViewDataSource {
     }
 
 
-//    MARK: - UICollectionViewDelegateFlowLayout
+    //  MARK: - UICollectionViewDelegateFlowLayout
 
 extension MenuCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -110,5 +126,9 @@ extension MenuCollectionView: UICollectionViewDelegateFlowLayout {
         label.sizeToFit()
         
         return CGSize(width: label.frame.width + 20, height: 32)
+    }
+    
+    private func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt indexPath: IndexPath) -> CGFloat {
+        return 10
     }
 }

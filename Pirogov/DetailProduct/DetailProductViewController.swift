@@ -19,9 +19,7 @@ class DetailProductViewController: UIViewController {
     
     var product: Product?
     
-    
-    
-    
+
     // MARK: - UIProrerties
     
     private lazy var scrollView: UIScrollView = {
@@ -131,11 +129,8 @@ class DetailProductViewController: UIViewController {
         scrollView.delegate = self
         scrollView.contentSize = CGSize(width: Int(UIScreen.main.bounds.width) * countImage.count, height: 263)
         
-//        contentView.frame.size = CGSize(width: Int(UIScreen.main.bounds.width) * countImage.count, height: Int(UIScreen.main.bounds.height))
-        
 
         energyLabel.text = "Энергетическая ценность: 234 Ккал на 100 гр."
-//        addButton.setTitle(nameTitleButton, for: .normal)
         
     }
     
@@ -166,8 +161,8 @@ class DetailProductViewController: UIViewController {
 
         countImage = product.image.images
         nameProductLabel.text = product.name
-        ingredientsProductLabel.text = "Состав: \(product.ingredients ?? "")"
-        nameTitleButton = "В корзину  " + String(product.price ?? 0) + " ₽"
+        ingredientsProductLabel.text = "Состав: \(product.ingredients)"
+        nameTitleButton = "В корзину \(product.price)" + " ₽"
         
         addInCartButton.setTitle(nameTitleButton, for: .normal)
 
@@ -279,7 +274,6 @@ extension DetailProductViewController {
             ingredientsProductLabel.heightAnchor.constraint(equalToConstant: 130),
             ingredientsProductLabel.topAnchor.constraint(equalTo: nameProductLabel.bottomAnchor, constant: 40),
             ingredientsProductLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
-            //            compositionProduct.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
         
         view.addSubview(energyLabel)

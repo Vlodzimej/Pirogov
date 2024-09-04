@@ -10,12 +10,18 @@ import UIKit
 
 
     //  MARK: - Структура для акций
+
 struct Sale {
-    static var imageArray = ["sale_bd", "sale_combo_1", "sale_combo_2", "sale_combo_3", "sale_combo_4"]
+    static var imagesArray: [UIImage?] = [UIImage(named:"sale_bd"),
+                                         UIImage(named: "sale_combo_1"),
+                                         UIImage(named: "sale_combo_2"),
+                                         UIImage(named: "sale_combo_3"),
+                                         UIImage(named:"sale_combo_4")]
 }
 
 
     //  MARK: - Структура для категорий меню
+
 struct MenuProducts {
     var name: String
     
@@ -36,50 +42,64 @@ struct MenuProducts {
 
 
     //  MARK: - Структура для описания товара
+
 struct Product {
-    var id: Int?
-    var name: String?
-    var ingredients: String?
-    var price: Int?
+    var id: Int
+    let name: String
+    let ingredients: String
+    var price: Int
     var image: ImagesProduct
 }
 
 
     //  MARK: - Структура для изображений товара
+
 struct ImagesProduct {
     var images: [UIImage?]
 }
 
 
     //  MARK: - Класс для корзины
+
+struct CartItem {
+    let product: Product
+    var quantity: Int
+}
+
 class Cart {
     static let shared = Cart()
     
-    private(set) var items: [Product] = []
+    private(set) var items: [CartItem] = []
     
     private init() {}
     
-    func addItem(_ item: Product) {
-        items.append(item)
-    }
-    
-    func removeItem(_ item: Product) {
-        if let index = items.firstIndex(where: { $0.id == item.id }) {
-            items.remove(at: index)
+    func addItem(_ product: Product) {
+        if let index = items.firstIndex(where: { $0.product.id == product.id }) {
+            items[index].quantity += 1
+        } else {
+            let newItem = CartItem(product: product, quantity: 1)
+            items.append(newItem)
         }
     }
-    
-    func totalItems() -> Int {
-        return items.count
+
+    func removeItem(_ product: Product) {
+        if let index = items.firstIndex(where: { $0.product.id == product.id }) {
+            if items[index].quantity > 1 {
+                items[index].quantity -= 1
+            } else {
+                items.remove(at: index)
+            }
+        }
     }
-    
+
     func totalPrice() -> Int {
-        return items.reduce(0) { $0 + ($1.price ?? 0) }
+        return items.reduce(0) { $0 + ($1.product.price) * ($1.quantity) }
     }
 }
 
 
     //  MARK: - Структура для группировки товаров по категориям
+
 struct GroupProducts {
     var products: [Product]
     
@@ -145,6 +165,7 @@ var pies: [Product] = [
 
 
     //  MARK: - Cakes
+
 var cakes: [Product] = [
     Product(id: 6,
             name: "Рулет меренговый",
@@ -185,6 +206,7 @@ var cakes: [Product] = [
 ]
 
     //  MARK: - Dessert
+
 var dessert: [Product] = [
     Product(id: 11,
             name: "Круглик мини с фисташковым кремом",
@@ -219,6 +241,7 @@ var dessert: [Product] = [
 ]
 
     //  MARK: - Bakary
+
 var bakery: [Product] = [
     Product(id: 16,
             name: "Круассан с шоколадным кремом \"Набор из 3 шт.\"",
@@ -337,7 +360,8 @@ var pizza: [Product] = [
     //  MARK: - Drinks
 
 var drinks: [Product] = [
-    Product(name: "Морс (брусничный)",
+    Product(id: 33,
+            name: "Морс (брусничный)",
             ingredients: "слоёное тесто собственного производства ,лимонный заварной крем, лимонная глазурь.",
             price: 94,
             image: ImagesProduct(images: [UIImage(named: "karavai")])
@@ -350,10 +374,10 @@ var drinks: [Product] = [
 func searchProducts(keyword: String) -> [Product] {
     let allProducts = pies + cakes + dessert
     return allProducts.filter { product in
-        product.name?.contains(keyword) == true || product.ingredients?.contains(keyword) == true
+        product.name.contains(keyword) == true || product.ingredients.contains(keyword) == true
     }
 }
 
-// Пример использования функции поиска
-//let searchResult = searchProducts(keyword: "шоколад")
+// Использование функции поиска
+//let searchResult = searchProducts(keyword: "пирог")
 //print(searchResult)

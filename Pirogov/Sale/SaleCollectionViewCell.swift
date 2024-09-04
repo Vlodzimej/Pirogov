@@ -14,7 +14,7 @@ class SaleCollectionViewCell: UICollectionViewCell {
     static let id = "SaleCollectionViewCell"
     
     lazy var imageView: UIImageView = {
-        let image = UIImage(named: "sale_bd")
+        let image = UIImage()
         let imageView = UIImageView(image: image)
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 20
@@ -33,10 +33,12 @@ class SaleCollectionViewCell: UICollectionViewCell {
 }
 
 
-//    MARK: - Settings Constraints
+    //  MARK: - Settings Constraints
 
 extension SaleCollectionViewCell {
+    
     private func setConstraints() {
+        
         self.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -45,7 +47,6 @@ extension SaleCollectionViewCell {
             imageView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor)
         ])
-
     }
 }
 

@@ -9,55 +9,135 @@ import Foundation
 import UIKit
 
 
-class SaleCollectionView: UICollectionView {
+class SaleCollectionView: UIView {
     
-    var imageArray = [UIImage(named: "sale_bd"),
-                      UIImage(named: "sale_combo_1"),
-                      UIImage(named: "sale_combo_2"),
-                      UIImage(named: "sale_combo_3"),
-                      UIImage(named: "sale_combo_4")]
+    //  MARK: - Properties
     
-    init(frame: CGRect) {
+    private var timer: Timer?
+    
+    private lazy var currentIndex: IndexPath = IndexPath(item: 1, section: 0)
+
+    let imagesArray = Sale.imagesArray
+    
+    var newImagesArray: [UIImage?] = []
+    
+    
+    lazy var saleCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        super.init(frame: frame, collectionViewLayout: layout)
+        layout.minimumLineSpacing = 10
         
-        delegate = self
-        dataSource = self
-        register(SaleCollectionViewCell.self, forCellWithReuseIdentifier: SaleCollectionViewCell.id)
-        translatesAutoresizingMaskIntoConstraints = false
-        showsHorizontalScrollIndicator = false
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(SaleCollectionViewCell.self, forCellWithReuseIdentifier: SaleCollectionViewCell.id)
+        return collectionView
+    }()
+    
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        setupCollectionView()
+        startAutoScroll()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
+    private func setupCollectionView() {
+        
+        saleCollectionView.delegate = self
+        saleCollectionView.dataSource = self
+        
+        addSubview(saleCollectionView)
+        
+        saleCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            saleCollectionView.heightAnchor.constraint(equalToConstant: 150),
+            saleCollectionView.topAnchor.constraint(equalTo: topAnchor),
+            saleCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            saleCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            saleCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
+        // Массив с дублируемыми элементами
+        newImagesArray = [imagesArray.last!] + imagesArray + [imagesArray.first!]
+        
+        // Устанавка начального контент
+        saleCollectionView.scrollToItem(at: currentIndex, at: .centeredHorizontally, animated: false)
+        
+
+    }
+
+    //  MARK: - Start Scrolling CollectionView
+
+    private func startAutoScroll() {
+        timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(scrollToNext), userInfo: nil, repeats: true)
+    }
+    
+//    НЕ СРАБАТЫВАЕТ
+    private func stopAutoScroll() {
+        timer?.invalidate()
+        timer = nil
+        print("OFF")
+    }
+    
+    
+    @objc func scrollToNext() {
+
+        let nextItem = (currentIndex.item + 1) % saleCollectionView.numberOfItems(inSection: currentIndex.section)
+                currentIndex = IndexPath(item: nextItem, section: currentIndex.section)
+                
+        saleCollectionView.scrollToItem(at: currentIndex, at: .centeredHorizontally, animated: true)
+    }
+    
+    private func resetScrollPositionIfNeeded() {
+        if currentIndex.item == newImagesArray.count - 1 {
+            // Если на последнем элементе, перемещаемся на первый элемент (оригинальный массив)
+            currentIndex = IndexPath(item: 1, section: 0)
+            saleCollectionView.scrollToItem(at: currentIndex, at: .centeredHorizontally, animated: false)
+        } else if currentIndex.item == 0 {
+            // Если на первом элементе, перемещаемся на последний элемент (оригинальный массив)
+            currentIndex = IndexPath(item: newImagesArray.count - 2, section: 0)
+            saleCollectionView.scrollToItem(at: currentIndex, at: .centeredHorizontally, animated: false)
+        }
+    }
+
 }
 
-//    MARK: - UICollectionView Delegate
+    //  MARK: - UICollectionView Delegate
 
 extension SaleCollectionView: UICollectionViewDelegate {
     
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        resetScrollPositionIfNeeded()
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        resetScrollPositionIfNeeded()
+    }
 }
 
-//    MARK: - UICollectionViewDataSource
+    //  MARK: - UICollectionViewDataSource
 
 extension SaleCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageArray.count
+        return newImagesArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell  = dequeueReusableCell(withReuseIdentifier: SaleCollectionViewCell.id, for: indexPath) as? SaleCollectionViewCell {
-            cell.imageView.image = imageArray[indexPath.item]
-            return cell
-        }
-        return UICollectionViewCell()
-    }  
+        guard let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: SaleCollectionViewCell.id, for: indexPath) as? SaleCollectionViewCell  else { return UICollectionViewCell() }
+        
+        cell.imageView.image = newImagesArray[indexPath.item]
+        return cell
+    }
 }
 
 
-//    MARK: - UICollectionViewDelegateFlowLayout
+    //  MARK: - UICollectionViewDelegateFlowLayout
 
 extension SaleCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

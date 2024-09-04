@@ -15,7 +15,7 @@ class CartViewController: UIViewController {
     
     private lazy var tableView = UITableView()
     
-    private var cartItems: [Product] {
+    private var cartItems: [CartItem] {
         return Cart.shared.items
     }
     
@@ -66,7 +66,7 @@ class CartViewController: UIViewController {
 
         view.backgroundColor = .white
         
-        tableView.register(CartTableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(CartTableViewCell.self, forCellReuseIdentifier: CartTableViewCell.id)
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -96,7 +96,9 @@ class CartViewController: UIViewController {
 
 
     //  MARK: - UITableView Delegate
+
 extension CartViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
@@ -108,17 +110,19 @@ extension CartViewController: UITableViewDelegate {
 
 
     //  MARK: - UITableView DataSeource
+
 extension CartViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cartItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CartTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CartTableViewCell.id, for: indexPath) as? CartTableViewCell else {
             return UITableViewCell()
         }
         
-        let product = cartItems[indexPath.row]
+        let product = Cart.shared.items[indexPath.row]
         cell.configureCell(with: product)
         
         return cell
@@ -130,19 +134,12 @@ extension CartViewController: UITableViewDataSource {
 
 
 
-    //  MARK: - Set Constraints
+    //  MARK: - Settings Constraints
+
 extension CartViewController {
     
     func setConstraints() {
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
+
         view.addSubview(orderButton)
         orderButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -176,7 +173,14 @@ extension CartViewController {
             totalPriceLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -15)
         ])
         
-        
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: stackView.topAnchor)
+        ])
 
     }
 }

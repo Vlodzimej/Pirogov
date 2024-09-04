@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 
-class MenuTableViewCell: UITableViewCell {
+class ProductsTableViewCell: UITableViewCell {
     
-    private let idCell = "Cell"
+    static let id = "Cell"
     
 
     // MARK: - UIProrerties
@@ -77,7 +77,7 @@ class MenuTableViewCell: UITableViewCell {
     func configureCell(model product: Product) {
         productImageView.image = product.image.images[0] ?? UIImage(named: "picture")
         nameProductLabel.text = product.name
-        priceLabel.text = "\(product.price ?? 0) ₽"
+        priceLabel.text = "\(product.price)"
     }
 }
 
@@ -85,7 +85,7 @@ class MenuTableViewCell: UITableViewCell {
 
     // MARK: - Settings Constraints
 
-extension MenuTableViewCell {
+extension ProductsTableViewCell {
     
     func setConstraints() {
         self.addSubview(productImageView)

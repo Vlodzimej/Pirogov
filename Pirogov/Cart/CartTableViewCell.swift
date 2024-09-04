@@ -17,9 +17,9 @@ class CartTableViewCell: UITableViewCell {
     
     //  MARK: - Properties
     
-    private let idCell = "Cell"
+    static let id = "Cell"
     
-    private var product: Product?
+    private var cartItem: CartItem?
     
     
     
@@ -91,6 +91,7 @@ class CartTableViewCell: UITableViewCell {
         button.titleLabel?.font = .monospacedDigitSystemFont(ofSize: 17, weight: .medium)
         button.titleLabel?.textAlignment = .center
         button.backgroundColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
+//        button.addTarget(<#T##target: Any?##Any?#>, action: <#T##Selector#>, for: <#T##UIControl.Event#>)
         return button
     }()
     
@@ -117,13 +118,14 @@ class CartTableViewCell: UITableViewCell {
     
     // MARK: - Configuration
     
-    func configureCell(with product: Product) {
+    func configureCell(with product: CartItem) {
         
-        self.product = product
+        self.cartItem = product
         
-        productImageView.image = product.image.images[0] ?? UIImage(named: "picture")
-        nameProductLabel.text = product.name
-        priceLabel.text = "\(product.price ?? 0) ₽"
+        productImageView.image = cartItem?.product.image.images[0] ?? UIImage(named: "picture")
+        nameProductLabel.text = cartItem?.product.name
+        priceLabel.text = "\(cartItem!.product.price) ₽"
+        countProductLabel.text = "\(String(describing: cartItem!.quantity))"
     }
 }
 
