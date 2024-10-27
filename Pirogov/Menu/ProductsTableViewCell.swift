@@ -77,7 +77,7 @@ class ProductsTableViewCell: UITableViewCell {
     func configureCell(model product: Product) {
         productImageView.image = product.image.images[0] ?? UIImage(named: "picture")
         nameProductLabel.text = product.name
-        priceLabel.text = "\(product.price)"
+        priceLabel.text = "\(product.price)" + " ₽"
     }
 }
 

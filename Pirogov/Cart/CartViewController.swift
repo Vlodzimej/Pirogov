@@ -79,6 +79,7 @@ class CartViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         tableView.reloadData()
         
         updateTotalPrice()
@@ -90,6 +91,14 @@ class CartViewController: UIViewController {
     
     private func updateTotalPrice() {
         totalPriceLabel.text = "\(Cart.shared.totalPrice()) ₽"
+    }
+    
+    //  MARK: - Method Update Cart
+    
+    private func updateCart(for product: Product, with newQuantity: Int) {
+        Cart.shared.updateItem(product, quantity: newQuantity)
+        tableView.reloadData()
+        updateTotalPrice()
     }
 }
 
@@ -122,8 +131,15 @@ extension CartViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let product = Cart.shared.items[indexPath.row]
-        cell.configureCell(with: product)
+        let cartItem = Cart.shared.items[indexPath.row]
+        
+        cell.configureCell(with: cartItem)
+        
+        cell.onUpdateQuantity = { [weak self] product, changeQuantity in
+            let currentQuantety = cartItem.quantity
+            let newQuantity = currentQuantety + changeQuantity
+            self?.updateCart(for: product, with: newQuantity)
+        }
         
         return cell
     }

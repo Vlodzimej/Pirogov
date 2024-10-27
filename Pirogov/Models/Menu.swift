@@ -73,6 +73,7 @@ class Cart {
     
     private init() {}
     
+    //  Добавление товара
     func addItem(_ product: Product) {
         if let index = items.firstIndex(where: { $0.product.id == product.id }) {
             items[index].quantity += 1
@@ -82,16 +83,27 @@ class Cart {
         }
     }
 
+    // Удаление товара
     func removeItem(_ product: Product) {
         if let index = items.firstIndex(where: { $0.product.id == product.id }) {
-            if items[index].quantity > 1 {
-                items[index].quantity -= 1
-            } else {
+            items[index].quantity -= 1
+            if items[index].quantity == 0 {
+            items.remove(at: index)
+            }
+        }
+    }
+    
+    //  Обновление товара
+    func updateItem(_ product: Product, quantity: Int) {
+        if let index = items.firstIndex(where: { $0.product.id == product.id }) {
+            items[index].quantity = quantity
+            if items[index].quantity <= 0 {
                 items.remove(at: index)
             }
         }
     }
-
+    
+    // Подсчет суммы всех товаров
     func totalPrice() -> Int {
         return items.reduce(0) { $0 + ($1.product.price) * ($1.quantity) }
     }
@@ -107,13 +119,7 @@ struct GroupProducts {
         
         var nameGroup:[[Product]] = []
         
-        nameGroup.append(pies)
-        nameGroup.append(cakes)
-        nameGroup.append(dessert)
-        nameGroup.append(bakery)
-        nameGroup.append(quiches)
-        nameGroup.append(pizza)
-        nameGroup.append(drinks)
+        nameGroup.insert(contentsOf: [pies, cakes, dessert, bakery, quiches, pizza, drinks], at: 0)
         
         return nameGroup
     }

@@ -19,9 +19,9 @@ class CartTableViewCell: UITableViewCell {
     
     static let id = "Cell"
     
-    private var cartItem: CartItem?
-    
-    
+    var product: Product?
+
+    var onUpdateQuantity: ((Product, Int) -> Void)?
     
     // MARK: - UIProrerties
     
@@ -54,22 +54,17 @@ class CartTableViewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .leading
-        stackView.distribution = .equalSpacing
-        //        stackView.backgroundColor = .gray
-        return stackView
-    }()
     
-    private lazy var minCountProductButton: UIButton = {
+    
+    private lazy var removeButton: UIButton = {
         let button = UIButton()
         button.setTitle("-", for: .normal)
+        button.setTitleColor(.darkGray, for: .normal)
         button.layer.cornerRadius = 6
         button.titleLabel?.font = .monospacedDigitSystemFont(ofSize: 17, weight: .medium)
         button.titleLabel?.textAlignment = .center
-        button.backgroundColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
+        button.backgroundColor = #colorLiteral(red: 0.9333333333, green: 0.9450980392, blue: 0.9450980392, alpha: 1)
+        button.addTarget(nil, action: #selector(decreaseQuantity), for: .touchUpInside)
         return button
     }()
     
@@ -84,25 +79,32 @@ class CartTableViewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var maxCountProducButtont: UIButton = {
+    private lazy var addButton: UIButton = {
         let button = UIButton()
         button.setTitle("+", for: .normal)
+        button.setTitleColor(.darkGray, for: .normal)
         button.layer.cornerRadius = 6
         button.titleLabel?.font = .monospacedDigitSystemFont(ofSize: 17, weight: .medium)
         button.titleLabel?.textAlignment = .center
-        button.backgroundColor = #colorLiteral(red: 0.06274509804, green: 0.231372549, blue: 0.3019607843, alpha: 1)
-//        button.addTarget(<#T##target: Any?##Any?#>, action: <#T##Selector#>, for: <#T##UIControl.Event#>)
+        button.backgroundColor = #colorLiteral(red: 0.9333333333, green: 0.9450980392, blue: 0.9450980392, alpha: 1)
+        button.addTarget(nil, action: #selector(increaseQuantity), for: .touchUpInside)
         return button
     }()
     
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [removeButton, countProductLabel, addButton])
+        stackView.axis = .horizontal
+        stackView.alignment = .leading
+        stackView.distribution = .equalSpacing
+        //        stackView.backgroundColor = .gray
+        return stackView
+    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
         
-        stackView.addArrangedSubview(nameProductLabel)
-        stackView.addArrangedSubview(priceLabel)
         
         setConstraints()
         
@@ -118,15 +120,33 @@ class CartTableViewCell: UITableViewCell {
     
     // MARK: - Configuration
     
-    func configureCell(with product: CartItem) {
+    func configureCell(with cartItem: CartItem) {
         
-        self.cartItem = product
+        self.product = cartItem.product
         
-        productImageView.image = cartItem?.product.image.images[0] ?? UIImage(named: "picture")
-        nameProductLabel.text = cartItem?.product.name
-        priceLabel.text = "\(cartItem!.product.price) ₽"
-        countProductLabel.text = "\(String(describing: cartItem!.quantity))"
+        productImageView.image = product?.image.images[0] ?? UIImage(named: "picture")
+        nameProductLabel.text = product?.name
+        priceLabel.text = "\(product?.price ?? 0) ₽"
+        countProductLabel.text = "\(String(describing: cartItem.quantity))"
     }
+    
+    //  MARK: - Method Decrease quantity product
+    
+    @objc func decreaseQuantity() {
+        guard let product = product else { return }
+        onUpdateQuantity?(product, -1)
+        print("-")
+    }
+    
+    
+    //  MARK: - Method Increase quantity product
+
+    @objc func increaseQuantity() {
+        guard let product = product else { return }
+        onUpdateQuantity?(product, 1)
+        print("+")
+    }
+    
 }
 
 
@@ -137,7 +157,7 @@ class CartTableViewCell: UITableViewCell {
 extension CartTableViewCell {
     
     func setConstraints() {
-        self.addSubview(productImageView)
+        contentView.addSubview(productImageView)
         productImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             productImageView.widthAnchor.constraint(equalToConstant: 90),
@@ -146,7 +166,7 @@ extension CartTableViewCell {
             productImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
         ])
         
-        self.addSubview(nameProductLabel)
+        contentView.addSubview(nameProductLabel)
         nameProductLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             nameProductLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.70),
@@ -154,7 +174,7 @@ extension CartTableViewCell {
             nameProductLabel.leadingAnchor.constraint(equalTo: productImageView.trailingAnchor, constant: 15)
         ])
         
-        self.addSubview(priceLabel)
+        contentView.addSubview(priceLabel)
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             priceLabel.widthAnchor.constraint(equalToConstant: 70),
@@ -164,43 +184,37 @@ extension CartTableViewCell {
         ])
         
         
-        self.addSubview(stackView)
+        contentView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             stackView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.25),
-            stackView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.45),
-//            stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15)
         ])
         
         
-        stackView.addSubview(minCountProductButton)
-        minCountProductButton.translatesAutoresizingMaskIntoConstraints = false
+        removeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            minCountProductButton.widthAnchor.constraint(equalToConstant: 30),
-            minCountProductButton.heightAnchor.constraint(equalToConstant: 30),
-            minCountProductButton.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
-            minCountProductButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
+            removeButton.widthAnchor.constraint(equalToConstant: 30),
+            removeButton.heightAnchor.constraint(equalToConstant: 30),
+            removeButton.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
+            removeButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
         ])
         
-        stackView.addSubview(countProductLabel)
         countProductLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             countProductLabel.widthAnchor.constraint(equalToConstant: 30),
             countProductLabel.heightAnchor.constraint(equalToConstant: 30),
             countProductLabel.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
-//            countProductLabel.leadingAnchor.constraint(equalTo: minCountProductButton.trailingAnchor, constant: 5)
             countProductLabel.centerXAnchor.constraint(equalTo: stackView.centerXAnchor)
         ])
         
-        stackView.addSubview(maxCountProducButtont)
-        maxCountProducButtont.translatesAutoresizingMaskIntoConstraints = false
+        addButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            maxCountProducButtont.widthAnchor.constraint(equalToConstant: 30),
-            maxCountProducButtont.heightAnchor.constraint(equalToConstant: 30),
-            maxCountProducButtont.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
-            maxCountProducButtont.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+            addButton.widthAnchor.constraint(equalToConstant: 30),
+            addButton.heightAnchor.constraint(equalToConstant: 30),
+            addButton.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
+            addButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
     }
 }

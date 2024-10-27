@@ -78,7 +78,7 @@ class SaleCollectionView: UIView {
         timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(scrollToNext), userInfo: nil, repeats: true)
     }
     
-//    НЕ СРАБАТЫВАЕТ
+//    НЕ ИСПОЛЬЗУЕТСЯ
     private func stopAutoScroll() {
         timer?.invalidate()
         timer = nil
