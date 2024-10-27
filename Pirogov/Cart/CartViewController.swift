@@ -10,9 +10,6 @@ import UIKit
 class CartViewController: UIViewController {
     
     //  MARK: - Properties
-    
-    let menu = GroupProducts.setup()
-    
     private lazy var tableView = UITableView()
     
     private var cartItems: [CartItem] {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class DetailProductViewController: UIViewController {
     
@@ -15,12 +16,9 @@ class DetailProductViewController: UIViewController {
     
     var countImage: [UIImage?] = []
     
-    var productImages = GroupProducts.setup()
-    
     var product: Product?
-    
 
-    // MARK: - UIProrerties
+    // MARK: - UIProperties
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
